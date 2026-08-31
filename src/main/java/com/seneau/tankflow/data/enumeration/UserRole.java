@@ -2,11 +2,11 @@ package com.seneau.tankflow.data.enumeration;
 
 public enum UserRole {
     ADMIN("Administrateur Système"),
-    COORDINATOR("Coordinateur Logistique"),
-    WAREHOUSE_CENTRAL("Magasinier Central"),
-    WAREHOUSE_FACTORY("Magasinier Usine"),
-    PRODUCTION_AGENT("Agent de Production"),
-    PROCUREMENT("Responsable Achats");
+    COORDINATEUR_LOGISTIQUE("Coordinateur Logistique"),
+    MAGASINIER_CENTRAL("Magasinier Central"),
+    MAGASINIER_USINE("Magasinier Usine"),
+    AGENT_PRODUCTION("Agent de Production"),
+    RESPONSABLE_ACHATS("Responsable Achats");
 
     private final String label;
 

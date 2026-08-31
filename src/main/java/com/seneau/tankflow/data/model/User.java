@@ -35,7 +35,7 @@ public class User extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role;  // ADMIN, COORDINATOR, WAREHOUSE_CENTRAL, etc.
+    private UserRole role;
 
     @Column(nullable = false)
     private Boolean isActive;  // Utilisateur actif
