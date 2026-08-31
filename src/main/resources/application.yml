@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: tankflow-service
+    description: Système de traçabilité des tanks de chlore
+
+  # Configuration JPA/Hibernate
+  jpa:
+    hibernate:
+      ddl-auto: validate  # N'utiliser que pour dev; utiliser Flyway en production
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          batch_size: 20
+          fetch_size: 50
+        order_inserts: true
+        order_updates: true
+    open-in-view: false
+
+  # Configuration DataSource PostgreSQL
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:tankflow}
+    username: ${DB_USER:postgres}
+    password: ${DB_PASSWORD:}  # Use environment variable in production
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # Configuration Flyway (migrations)
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+    validateOnMigrate: false
+
+  # Configuration Jackson (serialization JSON)
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+
+  # Configuration Actuator (health checks, metrics)
+  boot:
+    admin:
+      client:
+        enabled: false
+
+# Server configuration
+server:
+  port: ${SERVER_PORT:9010}
+  servlet:
+    context-path: /api/v1/tankflow
+  error:
+    include-message: always
+    include-binding-errors: always
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.seneau.tankflow: INFO  # Set to DEBUG for verbose logging during development
+    org.springframework.web: INFO
+    org.hibernate.SQL: INFO  # Set to DEBUG to see SQL statements
+    org.hibernate.type.descriptor.sql.BasicBinder: INFO  # Set to TRACE for parameter binding
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/tankflow-service.log
+    max-size: 10MB
+    max-history: 30
+
+# Management endpoints (Actuator)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+    info:
+      enabled: true
+  metrics:
+    export:
+      simple:
+        enabled: true
