@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * Événement immuable du workflow.
+ * Evenement immuable du workflow.
  * Enregistre chaque transition d'étape du cycle.
  * Utilisé pour l'audit et l'event sourcing léger.
  */
@@ -25,10 +25,12 @@ import java.time.LocalDateTime;
 public class WorkflowEvent extends AbstractEntity {
 
     @Column(nullable = false)
-    private Long cycleId;  // Cycle concerné
+    private Long cycleId;
+
+    private Long cycleStageId;
 
     @Column(nullable = false)
-    private Integer stepNumber;  // Étape (1-9)
+    private Integer stepNumber;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

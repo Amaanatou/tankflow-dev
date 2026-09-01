@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 /**
  * Un cycle/rotation d'un tank physique.
  * Représente un aller-retour complet du tank.
- * Contient 9 étapes du workflow avec deadline de 180 jours.
+ * Contient 9 étapes du workflow avec deadline de 210 jours.
  */
 @Entity
 @Table(name = "tank_cycle", uniqueConstraints = {
@@ -37,7 +37,7 @@ public class TankCycle extends AbstractEntity {
     private LocalDateTime returnedToSupplierAt;  // Jour N (clôture)
 
     @Column(nullable = false)
-    private LocalDateTime deadlineAt;  // startedAt + 180 jours
+    private LocalDateTime deadlineAt;  // startedAt + 210 jours
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
