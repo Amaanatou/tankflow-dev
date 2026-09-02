@@ -1,3 +1,9 @@
+-- Align schema to 5-table strategic model
+-- Rename tank_asset → tank, tank_cycle → cycle
+-- Remove non-strategic tables (alert, location, supplier, user)
+
+BEGIN;
+
 -- Renommer les tables aux noms stratégiques
 ALTER TABLE tank_asset RENAME TO tank;
 ALTER TABLE tank_cycle RENAME TO cycle;
@@ -19,3 +25,5 @@ ALTER INDEX idx_tank_cycle_asset RENAME TO idx_cycle_tank;
 ALTER INDEX idx_tank_cycle_status RENAME TO idx_cycle_status;
 ALTER INDEX idx_tank_cycle_deadline RENAME TO idx_cycle_deadline;
 ALTER INDEX idx_tank_cycle_code RENAME TO idx_cycle_code;
+
+COMMIT;
