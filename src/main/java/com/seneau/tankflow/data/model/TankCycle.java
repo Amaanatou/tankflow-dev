@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
  * Contient 9 étapes du workflow avec deadline de 210 jours.
  */
 @Entity
-@Table(name = "tank_cycle", uniqueConstraints = {
+@Table(name = "cycle", uniqueConstraints = {
         @UniqueConstraint(columnNames = "public_code")
 })
 @Data

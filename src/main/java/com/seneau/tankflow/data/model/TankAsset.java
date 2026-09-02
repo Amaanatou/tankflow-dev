@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * Un tank physique peut avoir plusieurs cycles (rotations).
  */
 @Entity
-@Table(name = "tank_asset", uniqueConstraints = {
+@Table(name = "tank", uniqueConstraints = {
         @UniqueConstraint(columnNames = "manufacturer_serial")
 })
 @Data

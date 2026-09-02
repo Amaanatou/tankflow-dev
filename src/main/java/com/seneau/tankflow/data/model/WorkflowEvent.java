@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Table(name = "workflow_event", uniqueConstraints = {
         @UniqueConstraint(columnNames = "idempotency_key")
 })
+// Note: cycleId references the 'cycle' table (renamed from tank_cycle)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
