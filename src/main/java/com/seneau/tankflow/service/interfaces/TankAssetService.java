@@ -9,6 +9,7 @@ public interface TankAssetService {
     Optional<TankAsset> getTankById(Long id);
     Optional<TankAsset> getTankByManufacturerSerial(String manufacturerSerial);
     List<TankAsset> getAllTanks();
+    List<TankAsset> findTanksByManufacturerSerials(List<String> manufacturerSerials);
     TankAsset updateTank(Long id, String supplierId, Boolean hasSafetyBell, String tankStatus, String notes);
     void deleteTank(Long id);
 }

@@ -15,8 +15,6 @@ public class WorkflowEventResponse {
 
     private Long cycleId;
 
-    private Long cycleStageId;
-
     private Integer stepNumber;
 
     private String eventType;

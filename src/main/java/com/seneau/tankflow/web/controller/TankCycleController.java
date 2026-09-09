@@ -4,6 +4,7 @@ import com.seneau.tankflow.data.enumeration.CycleStatus;
 import com.seneau.tankflow.data.model.TankCycle;
 import com.seneau.tankflow.service.interfaces.TankCycleService;
 import com.seneau.tankflow.web.dto.request.CreateTankCycleRequest;
+import com.seneau.tankflow.web.dto.response.StepDurationDetail;
 import com.seneau.tankflow.web.dto.response.TankCycleResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -93,6 +94,14 @@ public class TankCycleController {
         LocalDateTime returnDate = LocalDateTime.parse(returnedAt);
         TankCycle cycle = tankCycleService.recordReturnDate(id, returnDate);
         return ResponseEntity.ok(toResponse(cycle));
+    }
+
+    @GetMapping("/{id}/step-durations")
+    public ResponseEntity<List<StepDurationDetail>> getStepDurations(@PathVariable Long id) {
+        log.info("Fetching step durations for cycle: {}", id);
+
+        List<StepDurationDetail> stepDurations = tankCycleService.calculateStepDurations(id);
+        return ResponseEntity.ok(stepDurations);
     }
 
     private TankCycleResponse toResponse(TankCycle cycle) {

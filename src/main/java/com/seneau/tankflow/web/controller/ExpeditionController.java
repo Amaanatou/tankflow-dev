@@ -3,6 +3,7 @@ package com.seneau.tankflow.web.controller;
 import com.seneau.tankflow.data.model.Expedition;
 import com.seneau.tankflow.service.interfaces.ExpeditionService;
 import com.seneau.tankflow.web.dto.request.CreateExpeditionRequest;
+import com.seneau.tankflow.web.dto.request.MarkExpeditionAsArrivedRequest;
 import com.seneau.tankflow.web.dto.response.ExpeditionResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ public class ExpeditionController {
                 request.getType(),
                 request.getOrigine(),
                 request.getDestination(),
-                request.getStatut()
+                request.getStatut(),
+                request.getDateDepart()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(expedition));
@@ -105,10 +107,12 @@ public class ExpeditionController {
     }
 
     @PutMapping("/{id}/arrival")
-    public ResponseEntity<ExpeditionResponse> markAsArrived(@PathVariable Long id) {
-        log.info("Marking expedition {} as arrived", id);
+    public ResponseEntity<ExpeditionResponse> markAsArrived(
+            @PathVariable Long id,
+            @Valid @RequestBody MarkExpeditionAsArrivedRequest request) {
+        log.info("Marking expedition {} as arrived at {}", id, request.getDateArrivee());
 
-        Expedition expedition = expeditionService.updateExpeditionArrival(id);
+        Expedition expedition = expeditionService.updateExpeditionArrival(id, request.getDateArrivee());
         return ResponseEntity.ok(toResponse(expedition));
     }
 

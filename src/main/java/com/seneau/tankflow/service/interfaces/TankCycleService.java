@@ -2,6 +2,8 @@ package com.seneau.tankflow.service.interfaces;
 
 import com.seneau.tankflow.data.enumeration.CycleStatus;
 import com.seneau.tankflow.data.model.TankCycle;
+import com.seneau.tankflow.web.dto.response.StepDurationDetail;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -14,4 +16,6 @@ public interface TankCycleService {
     TankCycle updateCycleStatus(Long id, CycleStatus status);
     TankCycle recordReturnDate(Long id, LocalDateTime returnedAt);
     Optional<TankCycle> getCycleByPublicCode(String publicCode);
+    List<StepDurationDetail> calculateStepDurations(Long cycleId);
+    Optional<TankCycle> getActiveCycleByAssetId(Long assetId);
 }

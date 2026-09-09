@@ -27,4 +27,7 @@ public interface TankCycleRepository extends JpaRepository<TankCycle, Long> {
     List<TankCycle> findCyclesNearDeadline(@Param("days") Integer days, @Param("status") CycleStatus status);
 
     boolean existsByPublicCode(String publicCode);
+
+    @Query("SELECT tc FROM TankCycle tc WHERE tc.assetId = :assetId AND tc.status = 'IN_PROGRESS'")
+    List<TankCycle> findActiveCyclesByAssetId(@Param("assetId") Long assetId);
 }

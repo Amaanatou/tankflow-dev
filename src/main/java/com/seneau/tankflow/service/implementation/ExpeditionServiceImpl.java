@@ -23,6 +23,11 @@ public class ExpeditionServiceImpl implements ExpeditionService {
 
     @Override
     public Expedition createExpedition(String reference, String type, String origine, String destination, String statut) {
+        return createExpedition(reference, type, origine, destination, statut, LocalDateTime.now());
+    }
+
+    @Override
+    public Expedition createExpedition(String reference, String type, String origine, String destination, String statut, LocalDateTime dateDepart) {
         log.info("Creating expedition: {} from {} to {}", reference, origine, destination);
 
         if (expeditionRepository.existsByReference(reference)) {
@@ -35,7 +40,7 @@ public class ExpeditionServiceImpl implements ExpeditionService {
         expedition.setOrigine(origine);
         expedition.setDestination(destination);
         expedition.setStatut(statut);
-        expedition.setDateDepart(LocalDateTime.now());
+        expedition.setDateDepart(dateDepart != null ? dateDepart : LocalDateTime.now());
 
         return expeditionRepository.save(expedition);
     }
@@ -90,12 +95,21 @@ public class ExpeditionServiceImpl implements ExpeditionService {
 
     @Override
     public Expedition updateExpeditionArrival(Long id) {
-        log.info("Marking expedition {} as arrived", id);
+        return updateExpeditionArrival(id, LocalDateTime.now());
+    }
+
+    @Override
+    public Expedition updateExpeditionArrival(Long id, LocalDateTime dateArrivee) {
+        log.info("Marking expedition {} as arrived at {}", id, dateArrivee);
 
         Expedition expedition = expeditionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expedition not found with ID: " + id));
 
-        expedition.setDateArrivee(LocalDateTime.now());
+        if (dateArrivee.isBefore(expedition.getDateDepart())) {
+            throw new IllegalArgumentException("dateArrivee cannot be before dateDepart");
+        }
+
+        expedition.setDateArrivee(dateArrivee);
         expedition.setStatut("LIVRÉE");
         expedition.setUpdatedAt(LocalDateTime.now());
 

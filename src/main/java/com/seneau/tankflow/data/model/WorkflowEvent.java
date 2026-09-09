@@ -28,8 +28,6 @@ public class WorkflowEvent extends AbstractEntity {
     @Column(nullable = false)
     private Long cycleId;
 
-    private Long cycleStageId;
-
     @Column(nullable = false)
     private Integer stepNumber;
 
@@ -52,6 +50,6 @@ public class WorkflowEvent extends AbstractEntity {
     @Column(columnDefinition = "JSONB")
     private String metadata;  // Métadonnées JSON
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;  // Immutable
+    //@Column(nullable = false, updatable = false)
+    //private LocalDateTime createdAt;  // Immutable
 }

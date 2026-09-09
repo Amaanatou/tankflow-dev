@@ -3,6 +3,8 @@ package com.seneau.tankflow.web.controller;
 import com.seneau.tankflow.data.model.ExpeditionTank;
 import com.seneau.tankflow.service.interfaces.ExpeditionTankService;
 import com.seneau.tankflow.web.dto.request.AddCycleToExpeditionRequest;
+import com.seneau.tankflow.web.dto.request.AddTanksBySerialRequest;
+import com.seneau.tankflow.web.dto.response.AddTanksToExpeditionResult;
 import com.seneau.tankflow.web.dto.response.ExpeditionTankResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,20 @@ public class ExpeditionTankController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(expeditionTank));
+    }
+
+    @PostMapping("/by-serial")
+    public ResponseEntity<AddTanksToExpeditionResult> addTanksBySerialNumbers(
+            @PathVariable Long expeditionId,
+            @Valid @RequestBody AddTanksBySerialRequest request) {
+        log.info("Adding tanks by serial numbers to expedition {}: {}", expeditionId, request.getManufacturerSerials());
+
+        AddTanksToExpeditionResult result = expeditionTankService.addTanksBySerialNumbers(
+                expeditionId,
+                request.getManufacturerSerials()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping

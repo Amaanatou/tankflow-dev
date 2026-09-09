@@ -110,7 +110,6 @@ public class WorkflowEventController {
         return new WorkflowEventResponse(
                 event.getId(),
                 event.getCycleId(),
-                event.getCycleStageId(),
                 event.getStepNumber(),
                 event.getEventType() != null ? event.getEventType().name() : null,
                 event.getLocationId(),

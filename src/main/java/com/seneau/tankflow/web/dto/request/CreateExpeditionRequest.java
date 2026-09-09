@@ -1,9 +1,12 @@
 package com.seneau.tankflow.web.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -24,4 +27,7 @@ public class CreateExpeditionRequest {
 
     @NotBlank(message = "Statut is required")
     private String statut;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime dateDepart;  // optionnel, défaut NOW()
 }

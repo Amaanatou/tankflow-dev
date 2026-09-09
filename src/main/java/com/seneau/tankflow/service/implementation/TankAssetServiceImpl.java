@@ -55,6 +55,13 @@ public class TankAssetServiceImpl implements TankAssetService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<TankAsset> findTanksByManufacturerSerials(List<String> manufacturerSerials) {
+        log.info("Fetching tanks by manufacturer serials: {}", manufacturerSerials);
+        return tankAssetRepository.findByManufacturerSerialIn(manufacturerSerials);
+    }
+
+    @Override
     public TankAsset updateTank(Long id, String supplierId, Boolean hasSafetyBell, String tankStatus, String notes) {
         log.info("Updating tank ID={}, supplierId={}", id, supplierId);
 

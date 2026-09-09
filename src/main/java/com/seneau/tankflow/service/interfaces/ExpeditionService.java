@@ -2,12 +2,15 @@ package com.seneau.tankflow.service.interfaces;
 
 import com.seneau.tankflow.data.model.Expedition;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface ExpeditionService {
 
     Expedition createExpedition(String reference, String type, String origine, String destination, String statut);
+
+    Expedition createExpedition(String reference, String type, String origine, String destination, String statut, LocalDateTime dateDepart);
 
     Optional<Expedition> getExpeditionById(Long id);
 
@@ -22,6 +25,8 @@ public interface ExpeditionService {
     Expedition updateExpeditionStatut(Long id, String newStatut);
 
     Expedition updateExpeditionArrival(Long id);
+
+    Expedition updateExpeditionArrival(Long id, LocalDateTime dateArrivee);
 
     long getTotalExpeditionCount();
 }

@@ -1,6 +1,7 @@
 package com.seneau.tankflow.service.interfaces;
 
 import com.seneau.tankflow.data.model.ExpeditionTank;
+import com.seneau.tankflow.web.dto.response.AddTanksToExpeditionResult;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,6 +9,8 @@ import java.util.Optional;
 public interface ExpeditionTankService {
 
     ExpeditionTank addCycleToExpedition(Long expeditionId, Long cycleId, Long tankId);
+
+    AddTanksToExpeditionResult addTanksBySerialNumbers(Long expeditionId, List<String> manufacturerSerials);
 
     Optional<ExpeditionTank> getExpeditionTankById(Long id);
 
