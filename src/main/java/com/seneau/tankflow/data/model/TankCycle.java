@@ -1,5 +1,6 @@
 package com.seneau.tankflow.data.model;
 
+import com.seneau.tankflow.data.enumeration.CyclePosition;
 import com.seneau.tankflow.data.enumeration.CycleStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -43,12 +44,22 @@ public class TankCycle extends AbstractEntity {
     @Column(nullable = false)
     private CycleStatus status;  // IN_PROGRESS, COMPLETED
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private CyclePosition position;  // EN_TRANSIT, STOCKE, EN_UTILISATION, VIDE, HORS_CYCLE
+
     @Column(nullable = false)
     private Integer currentStepNumber;  // Étape actuelle (1-9)
 
     private Integer durationDays;  // Calculé auto
 
     private Integer daysRemaining;  // Calculé auto
+
+    @Column(length = 255)
+    private String localisation;  // Localisation actuelle du tank
+
+    @Column(length = 100)
+    private String zone;  // Zone actuelle
 
     @Column(precision = 10, scale = 2)
     private BigDecimal penaltyAmount;  // Pénalité en €

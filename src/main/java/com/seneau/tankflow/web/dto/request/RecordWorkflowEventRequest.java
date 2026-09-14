@@ -13,11 +13,19 @@ public class RecordWorkflowEventRequest {
     @NotNull(message = "Workflow step is required")
     private String step;
 
-    private Long locationId;
+    private String site;
 
-    private Long zoneId;
+    private String zone;
 
     private Long performedByUserId;
+
+    private String tankCondition;
+
+    private Boolean safetyBellPresent;
+
+    private String documentReference;
+
+    private String comment;
 
     @NotNull(message = "Idempotency key is required")
     private String idempotencyKey;

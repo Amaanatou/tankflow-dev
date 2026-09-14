@@ -1,5 +1,6 @@
 package com.seneau.tankflow.data.model;
 
+import com.seneau.tankflow.data.enumeration.TankCondition;
 import com.seneau.tankflow.data.enumeration.WorkflowStep;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,6 @@ import java.time.LocalDateTime;
 @Table(name = "workflow_event", uniqueConstraints = {
         @UniqueConstraint(columnNames = "idempotency_key")
 })
-// Note: cycleId references the 'cycle' table (renamed from tank_cycle)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,23 +33,35 @@ public class WorkflowEvent extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private WorkflowStep eventType;  // Type d'événement
+    private WorkflowStep eventType;
 
-    private Long locationId;  // Lieu de l'événement
+    @Column(length = 255)
+    private String site;
 
-    private Long zoneId;  // Zone du lieu
+    @Column(length = 100)
+    private String zone;
 
-    private Long performedByUserId;  // Utilisateur qui a effectué l'action
+    private Long performedByUserId;
 
     @Column(nullable = false)
-    private LocalDateTime eventTimestamp;  // Quand l'événement s'est produit
+    private LocalDateTime eventTimestamp;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 50)
+    private TankCondition tankCondition;
+
+    @Column
+    private Boolean safetyBellPresent;
+
+    @Column(length = 255)
+    private String documentReference;
+
+    @Column(columnDefinition = "TEXT")
+    private String comment;
 
     @Column(unique = true, length = 255)
-    private String idempotencyKey;  // Pour éviter les doublons (deviceId:clientEventId)
+    private String idempotencyKey;
 
     @Column(columnDefinition = "JSONB")
-    private String metadata;  // Métadonnées JSON
-
-    //@Column(nullable = false, updatable = false)
-    //private LocalDateTime createdAt;  // Immutable
+    private String metadata;
 }

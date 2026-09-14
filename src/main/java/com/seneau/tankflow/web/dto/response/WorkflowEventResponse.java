@@ -19,13 +19,21 @@ public class WorkflowEventResponse {
 
     private String eventType;
 
-    private Long locationId;
+    private String site;
 
-    private Long zoneId;
+    private String zone;
 
     private Long performedByUserId;
 
     private LocalDateTime eventTimestamp;
+
+    private String tankCondition;
+
+    private Boolean safetyBellPresent;
+
+    private String documentReference;
+
+    private String comment;
 
     private String idempotencyKey;
 

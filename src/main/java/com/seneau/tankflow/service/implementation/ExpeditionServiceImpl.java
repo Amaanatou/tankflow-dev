@@ -36,9 +36,30 @@ public class ExpeditionServiceImpl implements ExpeditionService {
 
         Expedition expedition = new Expedition();
         expedition.setReference(reference);
+        expedition.setOrigine(origine);
+        expedition.setDestination(destination);
+        expedition.setDateDepart(dateDepart != null ? dateDepart : LocalDateTime.now());
+
+        return expeditionRepository.save(expedition);
+    }
+
+    @Override
+    public Expedition createExpeditionWithEnums(String reference, com.seneau.tankflow.data.enumeration.ExpeditionType type,
+                                               String origine, String destination, String transporteur,
+                                               com.seneau.tankflow.data.enumeration.ExpeditionStatus statut,
+                                               LocalDateTime dateDepart) {
+        log.info("Creating expedition: {} from {} to {}", reference, origine, destination);
+
+        if (expeditionRepository.existsByReference(reference)) {
+            throw new IllegalArgumentException("Expedition reference already exists: " + reference);
+        }
+
+        Expedition expedition = new Expedition();
+        expedition.setReference(reference);
         expedition.setType(type);
         expedition.setOrigine(origine);
         expedition.setDestination(destination);
+        expedition.setTransporteur(transporteur);
         expedition.setStatut(statut);
         expedition.setDateDepart(dateDepart != null ? dateDepart : LocalDateTime.now());
 
@@ -87,7 +108,11 @@ public class ExpeditionServiceImpl implements ExpeditionService {
         Expedition expedition = expeditionRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expedition not found with ID: " + id));
 
-        expedition.setStatut(newStatut);
+        try {
+            expedition.setStatut(com.seneau.tankflow.data.enumeration.ExpeditionStatus.valueOf(newStatut.toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            log.warn("Invalid statut value: {}, ignoring", newStatut);
+        }
         expedition.setUpdatedAt(LocalDateTime.now());
 
         return expeditionRepository.save(expedition);
@@ -110,7 +135,7 @@ public class ExpeditionServiceImpl implements ExpeditionService {
         }
 
         expedition.setDateArrivee(dateArrivee);
-        expedition.setStatut("LIVRÉE");
+        expedition.setStatut(com.seneau.tankflow.data.enumeration.ExpeditionStatus.RECEIVED);
         expedition.setUpdatedAt(LocalDateTime.now());
 
         return expeditionRepository.save(expedition);

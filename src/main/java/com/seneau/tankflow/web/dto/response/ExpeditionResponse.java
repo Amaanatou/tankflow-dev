@@ -1,5 +1,7 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
+import com.seneau.tankflow.data.enumeration.ExpeditionType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +17,15 @@ public class ExpeditionResponse {
 
     private String reference;
 
-    private String type;
+    private ExpeditionType type;
 
     private String origine;
 
     private String destination;
 
-    private String statut;
+    private String transporteur;
+
+    private ExpeditionStatus statut;
 
     private LocalDateTime dateDepart;
 

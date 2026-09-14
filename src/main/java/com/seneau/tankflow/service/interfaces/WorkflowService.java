@@ -1,5 +1,6 @@
 package com.seneau.tankflow.service.interfaces;
 
+import com.seneau.tankflow.data.enumeration.TankCondition;
 import com.seneau.tankflow.data.enumeration.WorkflowStep;
 import com.seneau.tankflow.data.model.WorkflowEvent;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 public interface WorkflowService {
 
-    WorkflowEvent recordEvent(Long cycleId, WorkflowStep step, Long locationId, Long zoneId, Long performedByUserId, String idempotencyKey);
+    WorkflowEvent recordEvent(Long cycleId, WorkflowStep step, String site, String zone, Long performedByUserId, String idempotencyKey, String tankCondition, Boolean safetyBellPresent, String documentReference, String comment);
 
     List<WorkflowEvent> getEventsByCycle(Long cycleId);
 

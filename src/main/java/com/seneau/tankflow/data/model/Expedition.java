@@ -1,5 +1,7 @@
 package com.seneau.tankflow.data.model;
 
+import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
+import com.seneau.tankflow.data.enumeration.ExpeditionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,8 +31,9 @@ public class Expedition {
     @Column(nullable = false, unique = true, length = 100)
     private String reference;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String type;
+    private ExpeditionType type;
 
     @Column(nullable = false, length = 255)
     private String origine;
@@ -38,8 +41,12 @@ public class Expedition {
     @Column(nullable = false, length = 255)
     private String destination;
 
+    @Column(length = 255)
+    private String transporteur;
+
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private String statut;
+    private ExpeditionStatus statut;
 
     @Column(nullable = false)
     private LocalDateTime dateDepart;

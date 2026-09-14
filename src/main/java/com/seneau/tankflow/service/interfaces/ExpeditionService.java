@@ -1,5 +1,7 @@
 package com.seneau.tankflow.service.interfaces;
 
+import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
+import com.seneau.tankflow.data.enumeration.ExpeditionType;
 import com.seneau.tankflow.data.model.Expedition;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ public interface ExpeditionService {
     Expedition createExpedition(String reference, String type, String origine, String destination, String statut);
 
     Expedition createExpedition(String reference, String type, String origine, String destination, String statut, LocalDateTime dateDepart);
+
+    Expedition createExpeditionWithEnums(String reference, ExpeditionType type, String origine, String destination, String transporteur, ExpeditionStatus statut, LocalDateTime dateDepart);
 
     Optional<Expedition> getExpeditionById(Long id);
 

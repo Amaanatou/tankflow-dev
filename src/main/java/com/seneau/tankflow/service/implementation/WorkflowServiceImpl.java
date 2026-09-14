@@ -27,8 +27,9 @@ public class WorkflowServiceImpl implements WorkflowService {
     private final TankCycleRepository cycleRepository;
 
     @Override
-    public WorkflowEvent recordEvent(Long cycleId, WorkflowStep step, Long locationId, Long zoneId,
-                                     Long performedByUserId, String idempotencyKey) {
+    public WorkflowEvent recordEvent(Long cycleId, WorkflowStep step, String site, String zone,
+                                     Long performedByUserId, String idempotencyKey, String tankCondition,
+                                     Boolean safetyBellPresent, String documentReference, String comment) {
         log.info("Recording workflow event for cycle: {}, step: {}", cycleId, step);
 
         TankCycle cycle = cycleRepository.findById(cycleId)
@@ -47,10 +48,16 @@ public class WorkflowServiceImpl implements WorkflowService {
         event.setCycleId(cycleId);
         event.setStepNumber(step.getStepNumber());
         event.setEventType(step);
-        event.setLocationId(locationId);
-        event.setZoneId(zoneId);
+        event.setSite(site);
+        event.setZone(zone);
         event.setPerformedByUserId(performedByUserId);
         event.setEventTimestamp(LocalDateTime.now());
+        if (tankCondition != null) {
+            event.setTankCondition(com.seneau.tankflow.data.enumeration.TankCondition.valueOf(tankCondition.toUpperCase()));
+        }
+        event.setSafetyBellPresent(safetyBellPresent);
+        event.setDocumentReference(documentReference);
+        event.setComment(comment);
         event.setIdempotencyKey(idempotencyKey);
 
         WorkflowEvent saved = eventRepository.save(event);

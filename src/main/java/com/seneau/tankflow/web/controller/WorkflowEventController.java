@@ -34,10 +34,14 @@ public class WorkflowEventController {
         WorkflowEvent event = workflowService.recordEvent(
                 cycleId,
                 step,
-                request.getLocationId(),
-                request.getZoneId(),
+                request.getSite(),
+                request.getZone(),
                 request.getPerformedByUserId(),
-                request.getIdempotencyKey()
+                request.getIdempotencyKey(),
+                request.getTankCondition(),
+                request.getSafetyBellPresent(),
+                request.getDocumentReference(),
+                request.getComment()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(event));
@@ -112,10 +116,14 @@ public class WorkflowEventController {
                 event.getCycleId(),
                 event.getStepNumber(),
                 event.getEventType() != null ? event.getEventType().name() : null,
-                event.getLocationId(),
-                event.getZoneId(),
+                event.getSite(),
+                event.getZone(),
                 event.getPerformedByUserId(),
                 event.getEventTimestamp(),
+                event.getTankCondition() != null ? event.getTankCondition().name() : null,
+                event.getSafetyBellPresent(),
+                event.getDocumentReference(),
+                event.getComment(),
                 event.getIdempotencyKey(),
                 event.getMetadata(),
                 event.getCreatedAt()

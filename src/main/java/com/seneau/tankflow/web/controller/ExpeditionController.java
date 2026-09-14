@@ -28,11 +28,12 @@ public class ExpeditionController {
             @Valid @RequestBody CreateExpeditionRequest request) {
         log.info("Creating expedition: {}", request.getReference());
 
-        Expedition expedition = expeditionService.createExpedition(
+        Expedition expedition = expeditionService.createExpeditionWithEnums(
                 request.getReference(),
                 request.getType(),
                 request.getOrigine(),
                 request.getDestination(),
+                request.getTransporteur(),
                 request.getStatut(),
                 request.getDateDepart()
         );
@@ -123,6 +124,7 @@ public class ExpeditionController {
                 expedition.getType(),
                 expedition.getOrigine(),
                 expedition.getDestination(),
+                expedition.getTransporteur(),
                 expedition.getStatut(),
                 expedition.getDateDepart(),
                 expedition.getDateArrivee(),
