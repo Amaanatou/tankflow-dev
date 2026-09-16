@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,8 +24,10 @@ public class WorkflowEventResponse {
 
     private String zone;
 
-    private Long performedByUserId;
+    @JsonProperty("performedBy")
+    private String performedByUsername;
 
+    @JsonProperty("occurredAt")
     private LocalDateTime eventTimestamp;
 
     private String tankCondition;

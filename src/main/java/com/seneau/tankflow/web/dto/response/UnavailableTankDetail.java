@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,8 +10,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UnavailableTankDetail {
 
+    @JsonProperty("numeroFabricant")
     private String manufacturerSerial;
-    private String reason;  // "CYCLE_IN_PROGRESS", "NOT_FOUND", etc.
-    private Long activeCycleId;  // Si applicable
+
+    private String reason;
+
+    private Long activeCycleId;
+
     private String additionalInfo;
 }

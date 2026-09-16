@@ -1,10 +1,10 @@
 package com.seneau.tankflow.data.enumeration;
 
 public enum ExpeditionStatus {
-    SENT("Expédiée"),
-    EN_ROUTE("En transit"),
-    RECEIVED("Reçue"),
-    CANCELLED("Annulée");
+    BROUILLON("Brouillon"),
+    VALIDEE("Validée"),
+    EN_COURS("En cours"),
+    TERMINEE("Terminée");
 
     private final String label;
 

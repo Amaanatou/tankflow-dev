@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,12 @@ public class ExpeditionTankResponse {
     private Long cycleId;
 
     private Long tankId;
+
+    @JsonProperty("numeroFabricant")
+    private String manufacturerSerial;
+
+    @JsonProperty("cycleCode")
+    private String publicCode;
 
     private Boolean selected;
 

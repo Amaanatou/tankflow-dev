@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seneau.tankflow.data.enumeration.CycleStatus;
 import com.seneau.tankflow.data.model.TankCycle;
 import lombok.AllArgsConstructor;
@@ -19,18 +20,40 @@ import java.time.LocalDateTime;
 public class CycleResponse {
 
     private Long id;
-    private String publicCode;  // Format: TANK-[N°fab]-[Année]-[Code]
+
+    @JsonProperty("codePublic")
+    private String publicCode;
+
+    @JsonProperty("tankId")
     private Long assetId;
+
+    @JsonProperty("dateDebut")
     private LocalDateTime startedAt;
+
+    @JsonProperty("dateFin")
     private LocalDateTime returnedToSupplierAt;
+
+    @JsonProperty("dateLimite")
     private LocalDateTime deadlineAt;
+
+    @JsonProperty("statut")
     private CycleStatus status;
-    private Integer currentStepNumber;  // 1-9
+
+    @JsonProperty("etapeActuelle")
+    private Integer currentStepNumber;
+
+    @JsonProperty("joursEcoules")
     private Integer durationDays;
+
+    @JsonProperty("joursRestants")
     private Integer daysRemaining;
+
     private BigDecimal penaltyAmount;
+
     private Boolean isPenaltyApplied;
+
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 
     /**

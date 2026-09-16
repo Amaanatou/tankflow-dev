@@ -25,8 +25,9 @@ public class ExpeditionTank {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long expeditionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "expedition_id", nullable = false)
+    private Expedition expedition;
 
     @Column(nullable = false)
     private Long cycleId;
@@ -39,4 +40,9 @@ public class ExpeditionTank {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Transient
+    public Long getExpeditionId() {
+        return expedition != null ? expedition.getId() : null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
 import com.seneau.tankflow.data.enumeration.ExpeditionType;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,9 +29,13 @@ public class ExpeditionResponse {
 
     private ExpeditionStatus statut;
 
+    @JsonProperty("dateExpedition")
     private LocalDateTime dateDepart;
 
+    @JsonProperty("dateArrivee")
     private LocalDateTime dateArrivee;
+
+    private List<ExpeditionTankResponse> tanks;
 
     private LocalDateTime createdAt;
 

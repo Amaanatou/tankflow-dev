@@ -1,5 +1,6 @@
 package com.seneau.tankflow.service;
 
+import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
 import com.seneau.tankflow.data.model.Expedition;
 import com.seneau.tankflow.data.repository.ExpeditionRepository;
 import com.seneau.tankflow.service.implementation.ExpeditionServiceImpl;
@@ -38,7 +39,7 @@ class ExpeditionServiceTest {
         });
 
         Expedition result = expeditionService.createExpedition(
-                "EXP-001", "OUTBOUND", "Paris", "Lyon", "SENT"
+                "EXP-001", "FOURNISSEUR_VERS_SITE_PRINCIPAL", "Paris", "Lyon", "VALIDEE"
         );
 
         assertNotNull(result);
@@ -58,7 +59,7 @@ class ExpeditionServiceTest {
         when(expeditionRepository.save(any())).thenReturn(expedition);
 
         Expedition result = expeditionService.createExpedition(
-                "EXP-001", "OUTBOUND", "Paris", "Lyon", "SENT", customDate
+                "EXP-001", "FOURNISSEUR_VERS_SITE_PRINCIPAL", "Paris", "Lyon", "VALIDEE", customDate
         );
 
         assertNotNull(result);
@@ -74,7 +75,7 @@ class ExpeditionServiceTest {
         Expedition expedition = new Expedition();
         expedition.setId(expeditionId);
         expedition.setDateDepart(departDate);
-        expedition.setStatut("SENT");
+        expedition.setStatut(ExpeditionStatus.VALIDEE);
 
         when(expeditionRepository.findById(expeditionId)).thenReturn(Optional.of(expedition));
         when(expeditionRepository.save(any())).thenReturn(expedition);
@@ -83,7 +84,7 @@ class ExpeditionServiceTest {
 
         assertNotNull(result);
         assertEquals(arrivalDate, result.getDateArrivee());
-        assertEquals("LIVRÉE", result.getStatut());
+        assertEquals(ExpeditionStatus.TERMINEE, result.getStatut());
     }
 
     @Test

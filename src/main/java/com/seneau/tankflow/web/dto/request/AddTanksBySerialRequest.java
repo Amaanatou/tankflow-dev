@@ -1,5 +1,6 @@
 package com.seneau.tankflow.web.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AddTanksBySerialRequest {
 
-    @NotEmpty(message = "manufacturerSerials list cannot be empty")
+    @JsonProperty("numerosFabricants")
+    @NotEmpty(message = "Manufacturer serials list cannot be empty")
     private List<String> manufacturerSerials;
 }

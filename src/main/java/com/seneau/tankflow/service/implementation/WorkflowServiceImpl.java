@@ -63,6 +63,8 @@ public class WorkflowServiceImpl implements WorkflowService {
         WorkflowEvent saved = eventRepository.save(event);
 
         cycle.setCurrentStepNumber(step.getStepNumber());
+        cycle.setLocalisation(site);
+        cycle.setZone(zone);
         if (step.getStepNumber() == WorkflowStep.RETURN_TO_SUPPLIER.getStepNumber()) {
             cycle.setStatus(CycleStatus.COMPLETED);
             cycle.setReturnedToSupplierAt(LocalDateTime.now());

@@ -1,7 +1,9 @@
 package com.seneau.tankflow.web.controller;
 
 import com.seneau.tankflow.data.enumeration.WorkflowStep;
+import com.seneau.tankflow.data.model.User;
 import com.seneau.tankflow.data.model.WorkflowEvent;
+import com.seneau.tankflow.data.repository.UserRepository;
 import com.seneau.tankflow.service.interfaces.WorkflowService;
 import com.seneau.tankflow.web.dto.request.RecordWorkflowEventRequest;
 import com.seneau.tankflow.web.dto.response.WorkflowEventResponse;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,6 +25,7 @@ import java.util.stream.Collectors;
 public class WorkflowEventController {
 
     private final WorkflowService workflowService;
+    private final UserRepository userRepository;
 
     @PostMapping
     public ResponseEntity<WorkflowEventResponse> recordEvent(
@@ -111,22 +115,43 @@ public class WorkflowEventController {
     }
 
     private WorkflowEventResponse toResponse(WorkflowEvent event) {
-        return new WorkflowEventResponse(
-                event.getId(),
-                event.getCycleId(),
-                event.getStepNumber(),
-                event.getEventType() != null ? event.getEventType().name() : null,
-                event.getSite(),
-                event.getZone(),
-                event.getPerformedByUserId(),
-                event.getEventTimestamp(),
-                event.getTankCondition() != null ? event.getTankCondition().name() : null,
-                event.getSafetyBellPresent(),
-                event.getDocumentReference(),
-                event.getComment(),
-                event.getIdempotencyKey(),
-                event.getMetadata(),
-                event.getCreatedAt()
-        );
+        WorkflowEventResponse response = new WorkflowEventResponse();
+        response.setId(event.getId());
+        response.setCycleId(event.getCycleId());
+        response.setStepNumber(event.getStepNumber());
+        response.setEventType(event.getEventType() != null ? mapWorkflowStepToEventType(event.getEventType()) : null);
+        response.setSite(event.getSite());
+        response.setZone(event.getZone());
+        response.setPerformedByUsername(getUsernameFromId(event.getPerformedByUserId()));
+        response.setEventTimestamp(event.getEventTimestamp());
+        response.setTankCondition(event.getTankCondition() != null ? event.getTankCondition().name() : null);
+        response.setSafetyBellPresent(event.getSafetyBellPresent());
+        response.setDocumentReference(event.getDocumentReference());
+        response.setComment(event.getComment());
+        response.setIdempotencyKey(event.getIdempotencyKey());
+        response.setMetadata(event.getMetadata());
+        response.setCreatedAt(event.getCreatedAt());
+        return response;
+    }
+
+    private String getUsernameFromId(Long userId) {
+        if (userId == null) return null;
+        Optional<User> user = userRepository.findById(userId);
+        return user.map(User::getUsername).orElse("Unknown");
+    }
+
+    private String mapWorkflowStepToEventType(WorkflowStep step) {
+        if (step == null) return null;
+        return switch (step) {
+            case SHIPMENT_SENT -> "SHIPMENT";
+            case MAIN_RECEPTION -> "RECEPTION";
+            case ROUTED_TO_FACTORY -> "TRANSFER";
+            case FACTORY_RECEPTION -> "RECEPTION";
+            case START_USAGE -> "USE_START";
+            case END_USAGE -> "USE_END";
+            case RETURN_TO_MAIN -> "TRANSFER";
+            case MAIN_RETURN_RECEPTION -> "RECEPTION";
+            case RETURN_TO_SUPPLIER -> "SHIPMENT";
+        };
     }
 }

@@ -1,6 +1,7 @@
 package com.seneau.tankflow.web.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.seneau.tankflow.data.enumeration.ExpeditionStatus;
 import com.seneau.tankflow.data.enumeration.ExpeditionType;
 import jakarta.validation.constraints.NotBlank;
@@ -33,6 +34,7 @@ public class CreateExpeditionRequest {
     @NotNull(message = "Statut is required")
     private ExpeditionStatus statut;
 
+    @JsonProperty("dateExpedition")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime dateDepart;
 }

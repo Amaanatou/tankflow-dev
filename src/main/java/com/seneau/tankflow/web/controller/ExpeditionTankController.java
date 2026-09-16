@@ -106,13 +106,13 @@ public class ExpeditionTankController {
     }
 
     private ExpeditionTankResponse toResponse(ExpeditionTank expeditionTank) {
-        return new ExpeditionTankResponse(
-                expeditionTank.getId(),
-                expeditionTank.getExpeditionId(),
-                expeditionTank.getCycleId(),
-                expeditionTank.getTankId(),
-                expeditionTank.getSelected(),
-                expeditionTank.getCreatedAt()
-        );
+        ExpeditionTankResponse response = new ExpeditionTankResponse();
+        response.setId(expeditionTank.getId());
+        response.setExpeditionId(expeditionTank.getExpeditionId());
+        response.setCycleId(expeditionTank.getCycleId());
+        response.setTankId(expeditionTank.getTankId());
+        response.setSelected(expeditionTank.getSelected());
+        response.setCreatedAt(expeditionTank.getCreatedAt());
+        return response;
     }
 }

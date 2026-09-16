@@ -45,9 +45,9 @@ public class ExpeditionServiceImpl implements ExpeditionService {
 
     @Override
     public Expedition createExpeditionWithEnums(String reference, com.seneau.tankflow.data.enumeration.ExpeditionType type,
-                                               String origine, String destination, String transporteur,
-                                               com.seneau.tankflow.data.enumeration.ExpeditionStatus statut,
-                                               LocalDateTime dateDepart) {
+                                                String origine, String destination, String transporteur,
+                                                com.seneau.tankflow.data.enumeration.ExpeditionStatus statut,
+                                                LocalDateTime dateDepart) {
         log.info("Creating expedition: {} from {} to {}", reference, origine, destination);
 
         if (expeditionRepository.existsByReference(reference)) {
@@ -109,13 +109,34 @@ public class ExpeditionServiceImpl implements ExpeditionService {
                 .orElseThrow(() -> new ResourceNotFoundException("Expedition not found with ID: " + id));
 
         try {
-            expedition.setStatut(com.seneau.tankflow.data.enumeration.ExpeditionStatus.valueOf(newStatut.toUpperCase()));
+            com.seneau.tankflow.data.enumeration.ExpeditionStatus newStatus =
+                com.seneau.tankflow.data.enumeration.ExpeditionStatus.valueOf(newStatut.toUpperCase());
+
+            if (!isValidStatusTransition(expedition.getStatut(), newStatus)) {
+                throw new IllegalArgumentException(
+                    String.format("Cannot transition from %s to %s", expedition.getStatut(), newStatus)
+                );
+            }
+
+            expedition.setStatut(newStatus);
         } catch (IllegalArgumentException e) {
-            log.warn("Invalid statut value: {}, ignoring", newStatut);
+            throw new IllegalArgumentException("Invalid statut transition: " + e.getMessage());
         }
         expedition.setUpdatedAt(LocalDateTime.now());
 
         return expeditionRepository.save(expedition);
+    }
+
+    private boolean isValidStatusTransition(com.seneau.tankflow.data.enumeration.ExpeditionStatus current,
+                                           com.seneau.tankflow.data.enumeration.ExpeditionStatus target) {
+        if (current == target) return true;
+
+        return switch (current) {
+            case BROUILLON -> target == com.seneau.tankflow.data.enumeration.ExpeditionStatus.VALIDEE;
+            case VALIDEE -> target == com.seneau.tankflow.data.enumeration.ExpeditionStatus.EN_COURS;
+            case EN_COURS -> target == com.seneau.tankflow.data.enumeration.ExpeditionStatus.TERMINEE;
+            case TERMINEE -> false;
+        };
     }
 
     @Override
@@ -135,7 +156,7 @@ public class ExpeditionServiceImpl implements ExpeditionService {
         }
 
         expedition.setDateArrivee(dateArrivee);
-        expedition.setStatut(com.seneau.tankflow.data.enumeration.ExpeditionStatus.RECEIVED);
+        expedition.setStatut(com.seneau.tankflow.data.enumeration.ExpeditionStatus.TERMINEE);
         expedition.setUpdatedAt(LocalDateTime.now());
 
         return expeditionRepository.save(expedition);

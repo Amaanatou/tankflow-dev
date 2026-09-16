@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Expédition - Regroupement logistique de cycles de tanks.
@@ -58,6 +59,9 @@ public class Expedition {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @OneToMany(mappedBy = "expedition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<ExpeditionTank> tanks;
 
     @PreUpdate
     protected void onUpdate() {

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,10 +31,20 @@ public class TankCycleServiceImpl implements TankCycleService {
     public TankCycle createCycle(Long assetId, LocalDateTime startedAt, LocalDateTime deadlineAt) {
         log.info("Creating cycle for asset ID={}, started={}, deadline={}", assetId, startedAt, deadlineAt);
 
+        if (startedAt == null) {
+            throw new IllegalArgumentException("startedAt cannot be null");
+        }
+
+        LocalDateTime calculatedDeadline = startedAt.plusDays(210);
+        if (deadlineAt != null && !deadlineAt.isEqual(calculatedDeadline)) {
+            log.warn("Deadline {} does not match 210-day calculation {}. Using calculated deadline.", deadlineAt, calculatedDeadline);
+        }
+
         TankCycle cycle = new TankCycle();
         cycle.setAssetId(assetId);
         cycle.setStartedAt(startedAt);
-        cycle.setDeadlineAt(deadlineAt);
+        cycle.setDeadlineAt(calculatedDeadline);
+        cycle.setPublicCode(generatePublicCode(assetId));
         cycle.setStatus(CycleStatus.IN_PROGRESS);
         cycle.setCurrentStepNumber(1);
         cycle.setIsPenaltyApplied(false);
@@ -177,5 +188,11 @@ public class TankCycleServiceImpl implements TankCycleService {
             case 9 -> "Expédition retour fournisseur";
             default -> "Étape " + stepNumber;
         };
+    }
+
+    private String generatePublicCode(Long assetId) {
+        int year = Year.now().getValue();
+        String randomCode = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        return String.format("TANK-%d-%d-%s", assetId, year, randomCode);
     }
 }

@@ -96,15 +96,28 @@ public class TankAssetController {
     }
 
     private TankAssetResponse toResponse(TankAsset tank) {
-        return new TankAssetResponse(
-                tank.getId(),
-                tank.getManufacturerSerial(),
-                tank.getSupplierId(),
-                tank.getHasSafetyBell(),
-                tank.getTankStatus(),
-                tank.getNotes(),
-                tank.getCreatedAt(),
-                tank.getUpdatedAt()
-        );
+        TankAssetResponse response = new TankAssetResponse();
+        response.setId(tank.getId());
+        response.setManufacturerSerial(tank.getManufacturerSerial());
+        response.setSupplierId(tank.getSupplierId());
+        response.setHasSafetyBell(tank.getHasSafetyBell());
+        response.setTankStatus(calculateDynamicTankStatus(tank.getTankStatus()));
+        response.setNotes(tank.getNotes());
+        response.setCycles(null);
+        response.setCreatedAt(tank.getCreatedAt());
+        response.setUpdatedAt(tank.getUpdatedAt());
+        return response;
+    }
+
+    private String calculateDynamicTankStatus(String backendStatus) {
+        if (backendStatus == null) {
+            return "HORS_CYCLE";
+        }
+        return switch (backendStatus.toUpperCase()) {
+            case "ACTIVE" -> "EN_UTILISATION";
+            case "INACTIVE" -> "VIDE";
+            case "MAINTENANCE" -> "HORS_CYCLE";
+            default -> "HORS_CYCLE";
+        };
     }
 }

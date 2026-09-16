@@ -105,22 +105,66 @@ public class TankCycleController {
     }
 
     private TankCycleResponse toResponse(TankCycle cycle) {
-        return new TankCycleResponse(
-                cycle.getId(),
-                cycle.getPublicCode(),
-                cycle.getAssetId(),
-                cycle.getStartedAt(),
-                cycle.getReturnedToSupplierAt(),
-                cycle.getDeadlineAt(),
-                cycle.getStatus().name(),
-                cycle.getCurrentStepNumber(),
-                cycle.getDurationDays(),
-                cycle.getDaysRemaining(),
-                cycle.getPenaltyAmount(),
-                cycle.getIsPenaltyApplied(),
-                cycle.getVersion(),
-                cycle.getCreatedAt(),
-                cycle.getUpdatedAt()
-        );
+        updateCycleStatusBasedOnDeadline(cycle);
+        TankCycleResponse response = new TankCycleResponse();
+        response.setId(cycle.getId());
+        response.setPublicCode(cycle.getPublicCode());
+        response.setAssetId(cycle.getAssetId());
+        response.setStartedAt(cycle.getStartedAt());
+        response.setReturnedToSupplierAt(cycle.getReturnedToSupplierAt());
+        response.setDeadlineAt(cycle.getDeadlineAt());
+        response.setStatus(cycle.getStatus().name());
+        response.setCurrentStepNumber(cycle.getCurrentStepNumber());
+        int durationDays = calculateDurationDays(cycle);
+        int daysRemaining = calculateDaysRemaining(cycle);
+        response.setDurationDays(durationDays);
+        response.setDaysRemaining(daysRemaining);
+        response.setAlertLevel(calculateAlertLevel(daysRemaining));
+        response.setLocalisation(cycle.getLocalisation());
+        response.setZone(cycle.getZone());
+        response.setPenaltyAmount(cycle.getPenaltyAmount());
+        response.setIsPenaltyApplied(cycle.getIsPenaltyApplied());
+        response.setVersion(cycle.getVersion());
+        response.setCreatedAt(cycle.getCreatedAt());
+        response.setUpdatedAt(cycle.getUpdatedAt());
+        return response;
+    }
+
+    private Integer calculateDurationDays(TankCycle cycle) {
+        if (cycle.getStartedAt() == null) return 0;
+        java.time.LocalDateTime endDate = cycle.getReturnedToSupplierAt() != null
+            ? cycle.getReturnedToSupplierAt()
+            : java.time.LocalDateTime.now();
+        return (int) java.time.temporal.ChronoUnit.DAYS.between(cycle.getStartedAt(), endDate);
+    }
+
+    private Integer calculateDaysRemaining(TankCycle cycle) {
+        if (cycle.getDeadlineAt() == null) return 0;
+        long daysRemaining = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDateTime.now(), cycle.getDeadlineAt());
+        return (int) daysRemaining;
+    }
+
+    private void updateCycleStatusBasedOnDeadline(TankCycle cycle) {
+        if (cycle.getStatus() == com.seneau.tankflow.data.enumeration.CycleStatus.COMPLETED) {
+            return;
+        }
+        long daysRemaining = java.time.temporal.ChronoUnit.DAYS.between(java.time.LocalDateTime.now(), cycle.getDeadlineAt());
+        if (daysRemaining < 0) {
+            cycle.setStatus(com.seneau.tankflow.data.enumeration.CycleStatus.OVERDUE);
+        }
+    }
+
+    private String calculateAlertLevel(int daysRemaining) {
+        if (daysRemaining < 0) {
+            return "OVERDUE";
+        } else if (daysRemaining <= 5) {
+            return "J_MINUS_5";
+        } else if (daysRemaining <= 10) {
+            return "J_MINUS_10";
+        } else if (daysRemaining <= 15) {
+            return "J_MINUS_15";
+        } else {
+            return "NONE";
+        }
     }
 }

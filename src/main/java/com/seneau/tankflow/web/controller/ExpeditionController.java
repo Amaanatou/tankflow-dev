@@ -1,10 +1,15 @@
 package com.seneau.tankflow.web.controller;
 
 import com.seneau.tankflow.data.model.Expedition;
+import com.seneau.tankflow.data.model.TankAsset;
+import com.seneau.tankflow.data.model.TankCycle;
+import com.seneau.tankflow.data.repository.TankAssetRepository;
+import com.seneau.tankflow.data.repository.TankCycleRepository;
 import com.seneau.tankflow.service.interfaces.ExpeditionService;
 import com.seneau.tankflow.web.dto.request.CreateExpeditionRequest;
 import com.seneau.tankflow.web.dto.request.MarkExpeditionAsArrivedRequest;
 import com.seneau.tankflow.web.dto.response.ExpeditionResponse;
+import com.seneau.tankflow.web.dto.response.ExpeditionTankResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -22,6 +28,8 @@ import java.util.stream.Collectors;
 public class ExpeditionController {
 
     private final ExpeditionService expeditionService;
+    private final TankAssetRepository tankAssetRepository;
+    private final TankCycleRepository tankCycleRepository;
 
     @PostMapping
     public ResponseEntity<ExpeditionResponse> createExpedition(
@@ -118,18 +126,44 @@ public class ExpeditionController {
     }
 
     private ExpeditionResponse toResponse(Expedition expedition) {
-        return new ExpeditionResponse(
-                expedition.getId(),
-                expedition.getReference(),
-                expedition.getType(),
-                expedition.getOrigine(),
-                expedition.getDestination(),
-                expedition.getTransporteur(),
-                expedition.getStatut(),
-                expedition.getDateDepart(),
-                expedition.getDateArrivee(),
-                expedition.getCreatedAt(),
-                expedition.getUpdatedAt()
+        ExpeditionResponse response = new ExpeditionResponse();
+        response.setId(expedition.getId());
+        response.setReference(expedition.getReference());
+        response.setType(expedition.getType());
+        response.setOrigine(expedition.getOrigine());
+        response.setDestination(expedition.getDestination());
+        response.setTransporteur(expedition.getTransporteur());
+        response.setStatut(expedition.getStatut());
+        response.setDateDepart(expedition.getDateDepart());
+        response.setDateArrivee(expedition.getDateArrivee());
+        response.setTanks(expedition.getTanks() != null
+            ? expedition.getTanks().stream()
+                .map(this::buildExpeditionTankResponse)
+                .toList()
+            : null
         );
+        response.setCreatedAt(expedition.getCreatedAt());
+        response.setUpdatedAt(expedition.getUpdatedAt());
+        return response;
+    }
+
+    private ExpeditionTankResponse buildExpeditionTankResponse(com.seneau.tankflow.data.model.ExpeditionTank et) {
+        ExpeditionTankResponse response = new ExpeditionTankResponse();
+        response.setId(et.getId());
+        response.setExpeditionId(et.getExpeditionId());
+        response.setCycleId(et.getCycleId());
+        response.setTankId(et.getTankId());
+        response.setSelected(et.getSelected());
+        response.setCreatedAt(et.getCreatedAt());
+
+        Optional<TankAsset> tank = tankAssetRepository.findById(et.getTankId());
+        tank.ifPresent(t -> response.setManufacturerSerial(t.getManufacturerSerial()));
+
+        if (et.getCycleId() != null) {
+            Optional<TankCycle> cycle = tankCycleRepository.findById(et.getCycleId());
+            cycle.ifPresent(c -> response.setPublicCode(c.getPublicCode()));
+        }
+
+        return response;
     }
 }

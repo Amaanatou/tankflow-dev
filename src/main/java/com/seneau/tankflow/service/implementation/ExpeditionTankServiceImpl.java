@@ -1,5 +1,6 @@
 package com.seneau.tankflow.service.implementation;
 
+import com.seneau.tankflow.data.model.Expedition;
 import com.seneau.tankflow.data.model.ExpeditionTank;
 import com.seneau.tankflow.data.model.TankAsset;
 import com.seneau.tankflow.data.model.TankCycle;
@@ -40,8 +41,11 @@ public class ExpeditionTankServiceImpl implements ExpeditionTankService {
             throw new IllegalArgumentException("Cycle already in expedition");
         }
 
+        Expedition expedition = expeditionRepository.findById(expeditionId)
+            .orElseThrow(() -> new ResourceNotFoundException("Expedition not found with ID: " + expeditionId));
+
         ExpeditionTank expeditionTank = new ExpeditionTank();
-        expeditionTank.setExpeditionId(expeditionId);
+        expeditionTank.setExpedition(expedition);
         expeditionTank.setCycleId(cycleId);
         expeditionTank.setTankId(tankId);
         expeditionTank.setSelected(false);
