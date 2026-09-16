@@ -37,7 +37,7 @@ public class ExpeditionTankServiceImpl implements ExpeditionTankService {
     public ExpeditionTank addCycleToExpedition(Long expeditionId, Long cycleId, Long tankId) {
         log.info("Adding cycle {} (tank {}) to expedition {}", cycleId, tankId, expeditionId);
 
-        if (expeditionTankRepository.existsByExpeditionIdAndCycleId(expeditionId, cycleId)) {
+        if (expeditionTankRepository.existsByExpedition_IdAndCycleId(expeditionId, cycleId)) {
             throw new IllegalArgumentException("Cycle already in expedition");
         }
 
@@ -145,7 +145,7 @@ public class ExpeditionTankServiceImpl implements ExpeditionTankService {
     @Transactional(readOnly = true)
     public List<ExpeditionTank> getCyclesByExpedition(Long expeditionId) {
         log.debug("Fetching cycles for expedition {}", expeditionId);
-        return expeditionTankRepository.findByExpeditionId(expeditionId);
+        return expeditionTankRepository.findByExpedition_Id(expeditionId);
     }
 
     @Override
@@ -189,7 +189,7 @@ public class ExpeditionTankServiceImpl implements ExpeditionTankService {
     @Transactional(readOnly = true)
     public long countCyclesInExpedition(Long expeditionId) {
         log.debug("Counting cycles in expedition {}", expeditionId);
-        return expeditionTankRepository.countByExpeditionId(expeditionId);
+        return expeditionTankRepository.countByExpedition_Id(expeditionId);
     }
 
     @Override

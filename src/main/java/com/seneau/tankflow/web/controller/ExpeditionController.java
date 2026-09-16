@@ -150,7 +150,7 @@ public class ExpeditionController {
     private ExpeditionTankResponse buildExpeditionTankResponse(com.seneau.tankflow.data.model.ExpeditionTank et) {
         ExpeditionTankResponse response = new ExpeditionTankResponse();
         response.setId(et.getId());
-        response.setExpeditionId(et.getExpeditionId());
+        response.setExpeditionId(et.getExpedition() != null ? et.getExpedition().getId() : null);
         response.setCycleId(et.getCycleId());
         response.setTankId(et.getTankId());
         response.setSelected(et.getSelected());

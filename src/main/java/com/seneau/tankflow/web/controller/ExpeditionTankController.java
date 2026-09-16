@@ -108,7 +108,7 @@ public class ExpeditionTankController {
     private ExpeditionTankResponse toResponse(ExpeditionTank expeditionTank) {
         ExpeditionTankResponse response = new ExpeditionTankResponse();
         response.setId(expeditionTank.getId());
-        response.setExpeditionId(expeditionTank.getExpeditionId());
+        response.setExpeditionId(expeditionTank.getExpedition() != null ? expeditionTank.getExpedition().getId() : null);
         response.setCycleId(expeditionTank.getCycleId());
         response.setTankId(expeditionTank.getTankId());
         response.setSelected(expeditionTank.getSelected());

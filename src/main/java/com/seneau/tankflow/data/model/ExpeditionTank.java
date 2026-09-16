@@ -40,9 +40,4 @@ public class ExpeditionTank {
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Transient
-    public Long getExpeditionId() {
-        return expedition != null ? expedition.getId() : null;
-    }
 }

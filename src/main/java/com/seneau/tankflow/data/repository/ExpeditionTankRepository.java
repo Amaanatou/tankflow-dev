@@ -10,15 +10,17 @@ import java.util.Optional;
 @Repository
 public interface ExpeditionTankRepository extends JpaRepository<ExpeditionTank, Long> {
 
-    List<ExpeditionTank> findByExpeditionId(Long expeditionId);
+    // Navigue via la relation @ManyToOne: expedition.id au lieu de expeditionId
+    List<ExpeditionTank> findByExpedition_Id(Long expeditionId);
 
     List<ExpeditionTank> findByCycleId(Long cycleId);
 
     List<ExpeditionTank> findByTankId(Long tankId);
 
-    Optional<ExpeditionTank> findByExpeditionIdAndCycleId(Long expeditionId, Long cycleId);
+    // Navigue via la relation pour la condition compound
+    Optional<ExpeditionTank> findByExpedition_IdAndCycleId(Long expeditionId, Long cycleId);
 
-    boolean existsByExpeditionIdAndCycleId(Long expeditionId, Long cycleId);
+    boolean existsByExpedition_IdAndCycleId(Long expeditionId, Long cycleId);
 
-    long countByExpeditionId(Long expeditionId);
+    long countByExpedition_Id(Long expeditionId);
 }
